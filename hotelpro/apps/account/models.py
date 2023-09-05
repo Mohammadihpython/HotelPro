@@ -15,7 +15,7 @@ phone_regex = RegexValidator(
 # Create your models here.
 class CustomUser(AbstractUser, PermissionsMixin):
     phone_number = models.CharField(
-        _("Phone number"), max_length=11, unique=True, validators=[phone_regex]
+        _("Phone number"), max_length=14, unique=True, validators=[phone_regex]
     )
 
     USERNAME_FIELD = "phone_number"
