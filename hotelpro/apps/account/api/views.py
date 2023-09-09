@@ -10,9 +10,9 @@ from . import serializers
 user = get_user_model()
 
 
-class UserRegisterationAPIView(GenericAPIView):
+class UserRegistrationAPIView(GenericAPIView):
     permission_classes = (AllowAny,)
-    serializer_class = serializers.UserRegisterationSerializer
+    serializer_class = serializers.UserRegistrationSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

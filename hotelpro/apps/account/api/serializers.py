@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         )
 
 
-class UserRegisterationSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     Serializer class to serialize registration requests and create a new user.
     """
@@ -29,6 +29,8 @@ class UserRegisterationSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
+        if CustomUser.objects.filter(phone_number=validated_data["phone_number"]).exists():
+
         return CustomUser.objects.create_user(**validated_data)
 
 
