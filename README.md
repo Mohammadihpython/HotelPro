@@ -23,7 +23,7 @@ This is a Hotel Management System built using Django and Django Rest Framework. 
    ```
 8. Start the development server using
    ```
-   python manage.py createsuperuser
+   python manage.py runserver
    ``` 
 
 ## database desgin 
