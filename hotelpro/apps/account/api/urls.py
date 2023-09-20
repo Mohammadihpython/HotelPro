@@ -6,8 +6,9 @@ from . import views
 app_name = "account"
 
 urlpatterns = [
-    path("register/", views.UserRegistrationAPIView.as_view(), name="create-user"),
+    path("register/", views.OTPRegisterAPIView.as_view(), name="register"),
     path("login/", views.UserLoginAPIView.as_view(), name="login-user"),
+    path("changepassword/", views.ChangePasswordAPIView.as_view(), name="change-password"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
     path("logout/", views.UserLogoutAPIView.as_view(), name="logout-user"),
     path("", views.UserAPIView.as_view(), name="user-info"),

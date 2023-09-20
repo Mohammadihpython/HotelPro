@@ -1,11 +1,13 @@
 {
   "python.linting.flake8Enabled": true,
-  "python.linting.enabled": false,
+  "python.linting.enabled": true,
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "python.formatting.provider": "none",
   "python.linting.pylintEnabled": false,
   "python.linting.banditEnabled": false,
-  "cSpell.words": ["hotelpro"]
+  "cSpell.words": [
+    "hotelpro"
+  ]
 }
