@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -8,8 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .. import models
 from . import serializers
 from ..tasks import send_sms_code
-
 import random
+
 
 user = get_user_model()
 
@@ -52,21 +51,27 @@ class UserAPIView(RetrieveUpdateAPIView):
         return self.request.user
 
 
-class OTPRegisterAPIView(APIView):
-    permission_classes = [AllowAny]
+class RegisterAPIView(GenericAPIView):
+    permission_classes = ([AllowAny],)
+
+    def get_serializer_class(self):
+        super().get_serializer_class()
+        if self.request.method == "GET":
+            return serializers.OTPRequestSerializer
+        return serializers.OTPVerifiedRequestSerializer
 
     def get(self, request, *args, **kwargs):
-        """get phone number and send sms code to user in get method"""
-        serializer = serializers.OTPRequestSerializer(data=request.query_params)
+        serializer = self.get_serializer_class(data=request.query_params)
         if not serializer.is_valid(raise_exception=True):
-            return Response(status=status.HTTP_400_BAD_REQUEST())
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
         otp_code = "".join(str(random.randint(0, 9)) for _ in range(6))
 
         try:
-            send_sms_code(data["phone_number"], otp_code)
             data["code"] = otp_code
             models.UserOTP.objects.generate(data)
+            send_sms_code.delay(data["phone_number"], otp_code)
+
             return Response(
                 data={
                     "msg": "code send to user",
@@ -79,36 +84,37 @@ class OTPRegisterAPIView(APIView):
             )
 
     def post(self, request, *args, **kwargs):
-        """
-        get phone number,code user password and validate code
-        if valid verify user and create user
-        and return refresh token, access token,user data
-        """
-        serializer = serializers.OTPVerifiedRequestSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            data = serializer.validated_data
-            if not models.UserOTP.objects.is_valid(
-                phone_number=data["phone_number"],
-                code=data.pop("code"),
-            ):
-                return Response(
-                    {"msg": "wrong code or phone_number"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            if not models.CustomUser.objects.filter(
-                phone_number=data["phone_number"]
-            ).exists():
-                try:
-                    "create user and its tokens and return them as Response"
-                    return self._create_user(data)
-                except Exception as e:
-                    return Response(
-                        data={"msg": str(e)},
-                        status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    )
+        serializer = self.get_serializer_class(data=request.data)
+        if not serializer.is_valid(raise_exception=True):
+            return Response(
+                {"msg": "data is invalid"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        data = serializer.validated_data
+
+        if not models.UserOTP.objects.is_valid(
+            phone_number=data["phone_number"],
+            code=data.pop("code"),
+        ):
+            return Response(
+                {"msg": "wrong code or phone_number"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if models.CustomUser.objects.filter(phone_number=data["phone_number"]).exists():
             return Response(
                 data={"msg": "user already exists"},
                 status=status.HTTP_400_BAD_REQUEST,
+            )
+        "create user and it s tokens and return them as Response"
+
+        try:
+            return self._create_user(data)
+        except Exception as e:
+            return Response(
+                data={"msg": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
     def _create_user(self, data):
@@ -146,7 +152,7 @@ class ChangePasswordAPIView(UpdateAPIView):
                 return Response(
                     {"msg": "wrong old password"}, status=status.HTTP_400_BAD_REQUEST
                 )
-            user.set_password(serializer.data.get("new_password"))
+            user.set_password(serializer.data.get("new_password"))  # type: ignore
             return Response(
                 {"detail": "Password updated successfully."}, status=status.HTTP_200_OK
             )

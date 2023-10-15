@@ -9,5 +9,8 @@
   "python.linting.banditEnabled": false,
   "cSpell.words": [
     "hotelpro"
-  ]
+  ],
+  "window.autoDetectColorScheme": false,
+  "window.density.editorTabHeight": "compact",
+  "workbench.colorTheme": "Catppuccin Macchiato"
 }

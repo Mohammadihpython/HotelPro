@@ -10,7 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
     """
     Serializer class to serialize CustomUser model.
     """
-
     class Meta:
         model = CustomUser
         fields = (

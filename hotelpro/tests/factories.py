@@ -24,8 +24,6 @@ class AccountFactory(factory.django.DjangoModelFactory):
     username = fake.lexify(text="user_name_?????")
     first_name = fake.first_name()
     last_name = fake.last_name()
-    
 
 
 register(AccountFactory)
-

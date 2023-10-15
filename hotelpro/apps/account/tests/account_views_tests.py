@@ -22,7 +22,7 @@ def test_register_user_send_code(db, api_client):
     }
 
     post_response = client.post(path=endpoint, **data)
-    
+
 
     assert get_response.status_code == status.HTTP_200_OK
     assert post_response.status_code == status.HTTP_201_CREATED
