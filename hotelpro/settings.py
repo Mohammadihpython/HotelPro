@@ -38,13 +38,15 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "rest_framework",
+    # local apps
     "hotelpro.apps.account",
     "hotelpro.apps.booking",
+    "hotelpro.apps.room",
+    # third party apps
     "rest_framework_simplejwt.token_blacklist",
-    'drf_yasg',
-
+    "drf_yasg",
+    "django.contrib.staticfiles",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
