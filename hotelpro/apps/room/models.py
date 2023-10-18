@@ -13,7 +13,7 @@ class Room(models.Model):
     status = models.CharField(
         verbose_name=_("status"),
         max_length=32,
-        choices=STATUS.choices(),
+        choices=STATUS.choices,
         default=STATUS.available,
     )
     price_per_day = models.DecimalField(
@@ -25,7 +25,7 @@ class Room(models.Model):
     room_type = models.CharField(
         verbose_name=_("room type"),
         max_length=100,
-        choices=RoomType.choices(),
+        choices=RoomType.choices,
         default=RoomType.standard_room,
     )
     detail = models.TextField(_("room detail"), blank=True, null=True)

@@ -20,8 +20,9 @@ class UserLoginAPIView(GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validate_data
+        if not serializer.is_valid():
+            return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        user = serializer.validated_data
         serializer = serializers.UserSerializer(user)
         token = RefreshToken.for_user(user)
         data = serializer.data
@@ -52,16 +53,15 @@ class UserAPIView(RetrieveUpdateAPIView):
 
 
 class RegisterAPIView(GenericAPIView):
-    permission_classes = ([AllowAny],)
+    permission_classes = (AllowAny,)
 
     def get_serializer_class(self):
-        super().get_serializer_class()
         if self.request.method == "GET":
             return serializers.OTPRequestSerializer
         return serializers.OTPVerifiedRequestSerializer
 
     def get(self, request, *args, **kwargs):
-        serializer = self.get_serializer_class(data=request.query_params)
+        serializer = self.get_serializer(data=request.query_params)
         if not serializer.is_valid(raise_exception=True):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         data = serializer.validated_data
@@ -70,7 +70,7 @@ class RegisterAPIView(GenericAPIView):
         try:
             data["code"] = otp_code
             models.UserOTP.objects.generate(data)
-            send_sms_code.delay(data["phone_number"], otp_code)
+            send_sms_code(data["phone_number"], otp_code)
 
             return Response(
                 data={
@@ -84,7 +84,7 @@ class RegisterAPIView(GenericAPIView):
             )
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer_class(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid(raise_exception=True):
             return Response(
                 {"msg": "data is invalid"},
@@ -118,7 +118,9 @@ class RegisterAPIView(GenericAPIView):
             )
 
     def _create_user(self, data):
-        user = models.CustomUser.objects.create(**data, verify=True)
+        user = models.CustomUser(phone_number=data["phone_number"], username=data["username"])
+        user.set_password(data["password"])
+        user.save()
         token = RefreshToken.for_user(user)
         data["refresh_token"] = str(token)
 

@@ -1,8 +1,9 @@
 import random
+from numpy import require
 from rest_framework import serializers
 from ..models import CustomUser, UserOTP
 from ..tasks import send_sms_code, verify_sms
-
+from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
 
@@ -59,25 +60,20 @@ class OTPVerifiedResponseSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=11, required=True)
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
+class UserLoginSerializer(serializers.Serializer):
     """
-    Serializer class to authenticate users with email and password.
+    Serializer class to authenticate users with phone number and password.
     """
+    phone_number = serializers.CharField(
+        max_length=11, validators=[phone_regex], required=True
+    )
+    password = serializers.CharField(required=True)
 
-    class Meta:
-        model = CustomUser
-        fields = ("phone_number", "password")
-
-    def validate(self, data: object) -> object:
+    def validate(self, data):
         phone = data.get("phone_number")
         password = data.get("password")
-        user = (
-            CustomUser.objects.filter(phone_number=phone)
-            .select_related("password")
-            .first()
-        )
-        if user and user.check_password(password):
-            return data
+        if user := authenticate(phone_number=phone, password=password):
+            return user
         else:
             raise serializers.ValidationError("password or phone is wrong")
 

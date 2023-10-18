@@ -3,9 +3,12 @@ from rest_framework.response import Response
 from ..models import Room
 from .serializers import RoomSerializer
 from ..room_suggestion_ml import RoomSuggestionModel
+from rest_framework.permissions import IsAuthenticated
 
 
 class RoomSuggestionAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         room_preferences = request.data
 

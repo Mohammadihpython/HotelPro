@@ -50,6 +50,6 @@ The following API endpoints are available:
 
 - /account/register/ - GET, POST
 - /account/login/ - POST
-- /api/rooms/ - GET
+- /rooms/suggestion/ - POST
 - /api/bookings/ - GET, POST
 - /api/bookings/<int:pk>/ - GET, PUT, DELETE

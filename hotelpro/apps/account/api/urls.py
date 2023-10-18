@@ -6,7 +6,7 @@ app_name = "account"
 
 urlpatterns = [
     path("register/", views.RegisterAPIView.as_view(), name="register"),
-    path("login/", views.UserLoginAPIView.as_view(), name="login-user"),
+    path("login/", views.UserLoginAPIView.as_view(), name="login"),
     path(
         "changepassword/", views.ChangePasswordAPIView.as_view(), name="change-password"
     ),

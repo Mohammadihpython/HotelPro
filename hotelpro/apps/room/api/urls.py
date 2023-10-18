@@ -6,6 +6,6 @@ app_name = "room"
 
 urlpatterns = [
     path(
-        "room_suggestion", views.RoomSuggestionAPIView.as_view(), name="room-suggestion"
+        "suggestion", views.RoomSuggestionAPIView.as_view(), name="suggestion"
     )
 ]

@@ -1,17 +1,13 @@
-from enum import Enum
+from django.db import models
 
 
-class STATUS(Enum):
+class STATUS(models.TextChoices):
     available = ("available", "available")
     full = ("full", "Full")
     reserved = ("reserved", "reserved")
 
-    @classmethod
-    def choices(cls):
-        return [(status.value[0], status.name[1]) for status in cls]
 
-
-class RoomType(Enum):
+class RoomType(models.TextChoices):
     standard_room = (
         "Standard Room",
         "A basic room with essential amenities,suitable for budget-conscious travelers.",
@@ -41,7 +37,3 @@ class RoomType(Enum):
         "Executive Room",
         "A room designed for business travelers, typically offering extra services such as a dedicated workspace, complimentary breakfast, and access to a business lounge.",
     )
-
-    @classmethod
-    def choices(cls):
-        return [(room_type.value[0], room_type.name[1]) for room_type in cls]
