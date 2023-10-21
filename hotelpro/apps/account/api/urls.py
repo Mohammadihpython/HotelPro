@@ -14,3 +14,4 @@ urlpatterns = [
     path("logout/", views.UserLogoutAPIView.as_view(), name="logout-user"),
     path("", views.UserAPIView.as_view(), name="user-info"),
 ]
+ 

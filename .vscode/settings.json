@@ -1,16 +1,56 @@
 {
-  "python.linting.flake8Enabled": true,
-  "python.linting.enabled": true,
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.unicodeHighlight.nonBasicASCII": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "python.analysis.typeCheckingMode": "basic",
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
   "[python]": {
+    "editor.tabSize": 4,
+    "editor.formatOnType": true,
+    "editor.insertSpaces": true,
+    "editor.tabCompletion": "on",
+    "editor.autoIndent": "advanced",
+    "editor.trimAutoWhitespace": true,
+    "files.trimTrailingWhitespace": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true
+    },
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "python.formatting.provider": "none",
-  "python.linting.pylintEnabled": false,
-  "python.linting.banditEnabled": false,
-  "cSpell.words": [
-    "hotelpro"
+  "python.analysis.autoImportCompletions": true,
+  "editor.formatOnSaveMode": "file",
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "editor.formatOnSave": true,
+  "files.autoSave": "afterDelay",
+  "editor.inlineSuggest.enabled": true,
+  "workbench.colorTheme": "Aura Soft Dark",
+  "workbench.iconTheme": "catppuccin-macchiato",
+  "cSpell.userWords": [
+    "fastapi",
+    "joblib",
+    "pydantic",
+    "simplejwt",
+    "yasg"
   ],
-  "window.autoDetectColorScheme": false,
-  "window.density.editorTabHeight": "compact",
-  "workbench.colorTheme": "Catppuccin Macchiato"
+  "tabnine.experimentalAutoImports": true,
+  "python.analysis.packageIndexDepths": [
+    {
+      "name": "django",
+      "depth": 5
+    }
+  ],
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "extensions.ignoreRecommendations": true,
+  "sourcery.token": "user_Xbz_X8hrQvoXojvi0ItI7fkC8vKAAyHBhCg32seWDS_KOq0eAsvLA2BXp3M"
 }
