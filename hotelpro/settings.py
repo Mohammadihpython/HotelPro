@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "django.contrib.staticfiles",
     "rest_framework",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -188,3 +189,5 @@ SIMPLE_JWT = {
 # Celery settings
 CELERY_BROKER_URL = "redis://localhost:6379"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
