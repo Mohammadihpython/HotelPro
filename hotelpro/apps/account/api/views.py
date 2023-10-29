@@ -70,7 +70,7 @@ class RegisterAPIView(GenericAPIView):
         try:
             data["code"] = otp_code
             models.UserOTP.objects.generate(data)
-            send_sms_code(data["phone_number"], otp_code)
+            send_sms_code.delay(data["phone_number"], otp_code)
 
             return Response(
                 data={

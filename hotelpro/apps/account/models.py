@@ -34,21 +34,20 @@ def default_expire_time():
     return timezone.make_aware(datetime.now() + timedelta(minutes=5))
 
 
-class OTPRequestQuertSet(models.QuerySet):
+class OTPRequestQuerySet(models.QuerySet):
     def is_valid(self, phone_number, code):
         current_time = timezone.now()
-        result = self.filter(
+        return self.filter(
             phone_number=phone_number,
             code=code,
             expire_time_start__lt=current_time,
             expire_time_end__gt=current_time,
         ).exists()
-        return result
 
 
 class OTPManager(models.Manager):
     def get_queryset(self):
-        return OTPRequestQuertSet(self.model, using=self._db)
+        return OTPRequestQuerySet(self.model, using=self._db)
 
     def is_valid(self, phone_number, code):
         return self.get_queryset().is_valid(phone_number, code)
